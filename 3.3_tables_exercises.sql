@@ -14,7 +14,7 @@ Describe employees;
 -- 8. birth_date, hire_date is a date type columns
 -- 9. The dept_emp and dept_manager tables use the employees table by connecting it to the emp_no
 
--- Show the SQL that created the dept_manager table.
+-- 10. Show the SQL that created the dept_manager table.
 
 SHOW CREATE TABLE dept_manager;
 
