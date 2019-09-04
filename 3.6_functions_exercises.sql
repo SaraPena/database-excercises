@@ -10,12 +10,12 @@
  
 -- 4. For your query of employees born on Christmas and hired in the 90s, use datediff() to find out how many days they have been working at the company. (HINT: you will also need to use NOW() or CURDATE()).
 
-SELECT datediff(NOW(),hire_date), hire_date FROM employees 
+SELECT datediff(NOW(),hire_date) as days_worked, hire_date FROM employees 
 	WHERE (hire_date BETWEEN '1990-01-01' AND '1999-12-31') 
 		AND (birth_date LIKE '%12-25%')
-		ORDER BY birth_date, hire_date DESC;
+		ORDER BY days_worked DESC;
 -- 5. Find the smallest and largest salary from the salaries table. 
-Select min(salary), max(salary) from salaries;
+Select min(salary) as "smallest salary", max(salary) as "Maximum salary" from salaries;
 
 -- 6. Use your knowledge of built in SQL functions to generate a username for all the employees. A username should be all lowercase, and consist of the first character of the employees first name, the first 4 character of the employees last name, an underscore, the month the employee was born, and the last two digits of the year that they were born.
 Select lower(CONCAT(
