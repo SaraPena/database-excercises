@@ -4,7 +4,9 @@
  -- 3. Convert the names produced in your last query to all uppercase.
  
  USE employees;
- Select UPPER(Concat(first_name,' ',last_name)) as full_name from employees where last_name like '%E' AND last_name like 'E%';
+ Select UPPER(Concat(first_name,' ',last_name)) as full_name 
+ 	from employees 
+ 		where Concat(first_name,' ',last_name) like 'E%E';
  
 -- 4. For your query of employees born on Christmas and hired in the 90s, use datediff() to find out how many days they have been working at the company. (HINT: you will also need to use NOW() or CURDATE()).
 
