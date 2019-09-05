@@ -38,12 +38,13 @@ SELECT  CONCAT( count(gender)," ", gender) as count_gender
 	
 -- 8. Recall the query that generated usernames for the employees from the last lesson. Are there any duplicate usernames? BONUS: How many duplicate usernames are there?
 	
-Select COUNT(DISTINCT (lower(CONCAT(
+Select lower(CONCAT(
 	SUBSTR(first_name,1,1), 
 	SUBSTR(last_name,1,4), "_", 
 	SUBSTR(birth_date,6,2), 
-	SUBSTR(birth_date,3,2)))))
-	as username_distinct, count(*) as all_records from employees
+	SUBSTR(birth_date,3,2)))
+	as username, count(*) from employees
+	GROUP BY username
 	;
 	
 	
