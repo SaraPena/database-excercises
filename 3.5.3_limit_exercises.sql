@@ -13,7 +13,7 @@ SELECT * FROM employees
 		ORDER BY birth_date, hire_date DESC
 		Limit 5;
 
--- 4. Try to think of your results as batches, sets, or pages. The first five results are your first page. The five after that would be your second page, etc. Update the query to find the tenth page of results.
+-- 4. Try to think of your results as batches, sets, or pages. The first five results are your first page. The five after that would be your second page, etc. Update the query to find the tenth page of results. Limit and OFFSET can be used to create multiple pages of data. What is the relationship between OFFSET (number of pages to skip), LIMIT (number of results per page)? ANSWER: OFFSET is a position to start at, and LIMIT tells how many results to grab after and including that Offset.
 SELECT * FROM employees 
 	WHERE (hire_date BETWEEN '1990-01-01' AND '1999-12-31') 
 		AND (birth_date LIKE '%12-25%')
