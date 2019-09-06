@@ -110,7 +110,7 @@ ORDER BY average_salary DESC
 LIMIT 1;
 
 -- 7. Who is the highest paid employee in the Marketing department?
-
+USE employees;
 SELECT CONCAT(employees.first_name, ' ', employees.last_name) as full_name, salaries.salary
 FROM employees 
 JOIN salaries
@@ -138,8 +138,39 @@ ORDER BY salary DESC
 Limit 1;
 
 -- BONUS: Find the names of all current employees, their department name, and their current manager's name.
+SELECT CONCAT(employees.first_name, ' ', employees.last_name) as full_name, departments.dept_name as dept_name, manager_name.mn	
+FROM employees 
+JOIN dept_emp
+	ON dept_emp.emp_no = employees.emp_no
+JOIN departments
+	ON departments.dept_no = dept_emp.dept_no
+JOIN (SELECT CONCAT(employees.first_name, ' ', employees.last_name) as mn, departments.dept_no 
+		FROM employees
+		JOIN dept_manager
+			ON dept_manager.emp_no = employees.emp_no
+		JOIN departments
+			ON departments.dept_no = dept_manager.dept_no
+		WHERE dept_manager.to_date = '9999-01-01') as manager_name
+	ON manager_name.dept_no = departments.dept_no
+WHERE dept_emp.to_date = '9999-01-01';
 
-SELECT CONCAT(employees.first_name, ' ', employees.last_name) as full_name, departments.dept_no, CONCAT(employees.first_name, ' ', employees.last_name) as manager_name
+-- BONUS: Find the highest paid employee in each department
+
+SELECT Max(salaries.salary), departments.dept_name
+FROM salaries
+JOIN employees
+	on employees.emp_no = salaries.emp_no
+JOIN dept_emp
+	on dept_emp.emp_no = employees.emp_no
+JOIN departments
+	on departments.dept_no = dept_emp.dept_no	
+
+GROUP BY departments.dept_name
+;
+
+USE employees;
+
+SELECT departments.dept_name,CONCAT(employees.first_name, ' ', employees.last_name) as full_name, max_sal.max_salary
 FROM employees 
 JOIN salaries
 	ON salaries.emp_no = employees.emp_no
@@ -147,11 +178,24 @@ JOIN dept_emp
 	ON dept_emp.emp_no = salaries.emp_no
 JOIN departments
 	ON departments.dept_no = dept_emp.dept_no
-WHERE salaries.to_date = '9999-01-01' AND dept_emp.to_date = '9999-01-01' AND departments.dept_name = 'Marketing'
-ORDER BY salaries.salary DESC;
+WHERE ( SELECT Max(salaries.salary) as max_salary, departments.dept_name
+FROM salaries
+JOIN employees
+	on employees.emp_no = salaries.emp_no
+JOIN dept_emp
+	on dept_emp.emp_no = employees.emp_no
+JOIN departments
+	on departments.dept_no = dept_emp.dept_no	
+GROUP BY departments.dept_name
+) as max_sal 
+ON (max_dal.dept_name = departments.dept_name AND max_sal.max_salary = salaries.salary)
+WHERE dept_emp.to_date = '9999-01-01' AND salaries.to_date = '9999-01-01'
+ORDER by salaries.salary DESC
+;
 
 
- 
+
+
 
 
 
