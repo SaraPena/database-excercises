@@ -86,7 +86,7 @@ CREATE TEMPORARY table average_salaries AS
 		FROM employees.salaries
 JOIN employees.dept_emp using (emp_no)
 JOIN employees.departments using (dept_no)
-WHERE salaries.to_date = '9999-01-01'
+WHERE salaries.to_date = '9999-01-01' and dept_emp = '9999-01-01'
 GROUP BY dept_name;
 
 
