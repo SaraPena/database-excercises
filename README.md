@@ -1,4 +1,4 @@
-#README FILE for database-excercises
+# README FILE for database-excercises
 
 Exercises from Codeup curriculum using MYSQL database.
 
