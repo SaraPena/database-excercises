@@ -9,4 +9,4 @@ Exercises from Codeup curriculum using MYSQL database.
 4. Select Statements
 
 # REVIEW
-Upon completion of Codeup Data Science program on 1/30 I went back to these exercises, and working through completing them again to work on making my SQL skills for fluid.
+Upon completion of Codeup Data Science program on 1/30 I went back to these exercises, and working through completing them again to work on making my SQL skills more fluid.
