@@ -46,3 +46,17 @@ DESCRIBE payments;
 SELECT *
 FROM payments;
 
+
+/*
+3. Find out how the average pay in each department compares to the overall average pay. In order to make the comparison easier, you should use the z score for salaries. In terms of salary what is the best department to work for?
+*/
+
+USE employees;
+
+SELECT dept_name, (AVG(salary) - (SELECT AVG(salary) FROM salaries WHERE salaries.to_date > CURDATE()))/(SELECT STD(salary) FROM salaries WHERE salaries.to_date > CURDATE()) as salary_z_score
+FROM salaries
+LEFT JOIN dept_emp using (emp_no)
+LEFT JOIN departments using (dept_no)
+WHERE dept_emp.to_date > CURDATE() and salaries.to_date > CURDATE()
+GROUP BY dept_no
+ORDER BY dept_name;
