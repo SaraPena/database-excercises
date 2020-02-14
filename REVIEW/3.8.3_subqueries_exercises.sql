@@ -47,3 +47,21 @@ SELECT first_name, last_name, salary
 FROM employees
 JOIN salaries using (emp_no)
 WHERE to_date = (SELECT DISTINCT to_date FROM salaries WHERE to_date > CURDATE()) AND salary > (SELECT AVG(salary) FROM salaries);
+
+/*How many current salaries are within 1 standard deviation of the highest salary? What percentage of salaries is this?*/
+
+SELECT (SELECT count(*)
+FROM salaries
+WHERE salary >= (SELECT MAX(salary) - STD(salary) from salaries) and to_date > CURDATE()) /(SELECT count(*)
+FROM salaries
+WHERE to_date > CURDATE());
+
+/* BONUS: Find the fist and last name of the highest paid employee, and their department, and gender*/
+
+SELECT first_name, last_name, gender, dept_name, hire_date, title, birth_date, salary
+FROM employees
+LEFT JOIN salaries using (emp_no)
+LEFT JOIN dept_emp using (emp_no)
+LEFT JOIN titles using (emp_no)
+LEFT JOIN departments using (dept_no)
+WHERE salary = (SELECT MAX(salary) FROM salaries) and salaries.to_date = (SELECT DISTINCT to_date FROM salaries WHERE to_date >CURDATE()) and titles.to_date > CURDATE();
