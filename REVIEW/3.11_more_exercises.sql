@@ -131,4 +131,109 @@ JOIN country ON country.Code = city.CountryCode
 WHERE city.Name LIKE 'Los Angeles';
 
 
+/* Sakila Datbase
+1. Display the first and last names in all lowercase of all the actors.
 
+*/
+
+USE sakila;
+
+SELECT lower(CONCAT(first_name, ' ', last_name)) as full_name
+FROM actor;
+
+/*
+2. You need to find the ID number, first name, and last name of an actor, of whom you only know the first name "Joe". What is one query you could use to obtain this information?
+*/
+
+SELECT actor_id, first_name, last_name
+FROM actor
+WHERE first_name LIKE '%JOE%';
+
+/*
+3. Find all actors whose last name contain the letters 'gen'
+*/
+
+SELECT first_name, last_name
+FROM actor
+WHERE last_name LIKE '%gen%';
+
+/*
+4. Find all actors whose last names contain the letter 'li'. This time order the names by last name and first name in that order.
+*/
+
+SELECT first_name, last_name
+FROM actor
+WHERE last_name LIKE '%li%'
+ORDER BY last_name, first_name;
+
+/*
+5. Using IN, display the `country_id` and `country` columns for the following countries: Afghanistan, Bangledesh, and China.
+*/
+
+SELECT country_id, country
+from country
+WHERE country IN ('Afghanistan', 'Bangladesh', 'China');
+
+/*
+6. List the last names of all actors, as well as how many actors have the last name.
+*/
+
+SELECT last_name, count(*) as count
+FROM actor
+GROUP BY last_name;
+
+/*
+7. List last names of actors and the number of actors who have that last name, but only for names that are shared by as least two actors.
+*/
+
+SELECT last_name, count
+FROM (SELECT last_name, count(*) as count
+		FROM actor
+		GROUP BY last_name) as lc
+WHERE count >= 2
+ORDER BY count, last_name;
+
+/*
+8. You cannot locate the schema of the address table, which query would you use to recreate it?
+*/
+
+DESCRIBE address;
+
+/*
+9. Use JOIN to display the first and last names, as well as the address, of each staff member.
+*/
+
+SELECT first_name, last_name, address
+FROM staff
+LEFT JOIN address using (address_id);
+
+/*
+10. Use JOIN to display the total amount rung up by each staff member in August 2005
+*/
+
+SELECT staff_id, SUM(amount) as amount_rung_up
+FROM payment
+LEFT JOIN staff using (staff_id)
+WHERE payment_date LIKE '2005-08%'
+GROUP BY staff_id;
+
+/*
+11. List each film and the number of actors who are listed for that film.
+*/
+
+SELECT title, count(*) as actor_count
+FROM film
+LEFT JOIN film_actor using (film_id)
+LEFT JOIN actor using (actor_id)
+GROUP BY title
+ORDER BY actor_count DESC;
+
+/*
+12. How many copies of the film Hunchback Impossible exist in the inventory system
+*/
+
+SELECT title, count(*)
+FROM film
+RIGHT JOIN inventory using (film_id)
+GROUP BY title
+ORDER BY count(*) DESC;
