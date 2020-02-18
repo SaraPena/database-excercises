@@ -93,4 +93,42 @@ Find all countries whose local name is different from the official name
 
 SELECT Name
 FROM country
-WHERE LocalName NOT LIKE Name
+WHERE LocalName NOT LIKE Name;
+
+/*
+How many countries have a life expectancy less than 55 years?
+*/
+
+SELECT COUNT(*)
+FROM country
+WHERE LifeExpectancy < 55;
+
+/*
+What state is Los Angeles located in?
+*/
+
+SELECT city.Name, District, CountryCode, country.Name
+FROM city
+JOIN country ON country.Code = city.CountryCode
+WHERE city.Name LIKE 'Los Angeles';
+
+/*
+What region on the world is Los Angeles located in?
+*/
+
+SELECT city.Name, District, CountryCode, country.Name, Region
+FROM city
+JOIN country ON country.Code = city.CountryCode
+WHERE city.Name LIKE 'Los Angeles';
+
+/*
+What is the life expectancy in Los Angeles?
+*/
+
+SELECT city.Name, District, CountryCode, country.Name, Region, LifeExpectancy
+FROM city
+JOIN country ON country.Code = city.CountryCode
+WHERE city.Name LIKE 'Los Angeles';
+
+
+
