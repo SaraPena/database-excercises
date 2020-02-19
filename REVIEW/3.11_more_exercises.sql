@@ -229,11 +229,76 @@ GROUP BY title
 ORDER BY actor_count DESC;
 
 /*
-12. How many copies of the film Hunchback Impossible exist in the inventory system
+12. How many copies of the film Hunchback Impossible exist in the inventory system?
 */
 
 SELECT title, count(*)
 FROM film
 RIGHT JOIN inventory using (film_id)
+WHERE title = 'Hunchback Impossible'
 GROUP BY title
 ORDER BY count(*) DESC;
+
+/*
+13. The music of Queen and Kris Kristofferson have seen an unlikely resurgence. As an unintended consequence, films starting with the letters K and Q have also soared in popularity. Use subqueries to display the titles of movies starting with the letters K and Q whose language is English. 
+*/
+
+SELECT title 
+FROM film
+LEFT join language using (language_id)
+WHERE (title LIKE 'k%' OR title like 'Q%') AND language.name = 'English';
+
+/*
+14. Use subqueries to display all actors who appear in the film Alone Trip.
+*/
+
+SELECT actor_id, film_id, first_name, last_name
+FROM actor
+LEFT JOIN film_actor using (actor_id)
+LEFT JOIN film using (film_id)
+WHERE title = 'Alone Trip';
+
+/*
+15. You want to run an email marketing campaign in Canada, for which you will need the names and email addresses of all Canadian customers.
+*/
+
+Select first_name, last_name, email
+FROM customer
+LEFT JOIN address using (address_id)
+LEFT JOIN city using (city_id)
+LEFT JOIN country using (country_id)
+WHERE country = 'Canada';
+
+/*
+16. Sales have been lagging amoung young families, and you wish to target all family movies for a promotion. Identify all movies catagorized as family films.
+*/
+
+SELECT title
+FROM film
+LEFT JOIN film_category using (film_id)
+LEFT JOIN category using (category_id)
+WHERE category.name = 'Family';
+
+/*
+17. Write a query to display how much business, in dollars, each store has brought in.
+*/
+
+SELECT store_id, staff_id, SUM(amount)
+FROM payment
+LEFT JOIN staff using (staff_id)
+LEFT JOIN store using (store_id)
+GROUP BY store_id, staff_id;
+
+/*
+18. Write a query to display for each store it's store_id, city, and country. 
+*/
+
+SELECT store_id, city, country
+FROM store
+LEFT JOIN address using (address_id)
+LEFT JOIN city using (city_id)
+LEFT JOIN country using (country_id);
+
+/*
+19. List the top 5 genres in gross revenue in decending order.
+*/
