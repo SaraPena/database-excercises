@@ -302,3 +302,15 @@ LEFT JOIN country using (country_id);
 /*
 19. List the top 5 genres in gross revenue in decending order.
 */
+
+
+SELECT name as genre, SUM(amount) as gross_revenue
+FROM film
+LEFT JOIN film_category using (film_id)
+LEFT JOIN category using (category_id)
+LEFT JOIN inventory using (film_id)
+LEFT JOIN rental using (inventory_id)
+LEFT JOIN payment using (rental_id)
+GROUP BY genre
+ORDER BY gross_revenue DESC
+LIMIT 5;
