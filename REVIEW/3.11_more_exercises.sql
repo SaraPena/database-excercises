@@ -302,8 +302,6 @@ LEFT JOIN country using (country_id);
 /*
 19. List the top 5 genres in gross revenue in decending order.
 */
-
-
 SELECT name as genre, SUM(amount) as gross_revenue
 FROM film
 LEFT JOIN film_category using (film_id)
@@ -314,3 +312,152 @@ LEFT JOIN payment using (rental_id)
 GROUP BY genre
 ORDER BY gross_revenue DESC
 LIMIT 5;
+
+/*
+1. SELECT Statements
+	a. select all columns from the actor table
+*/
+
+SELECT * 
+FROM actor;
+
+/*
+	b. Select only the last name column from the actors table.
+*/
+
+SELECT last_name
+FROM actor;
+
+/*
+2. DISTINCT operator
+	a. SELECT all distinct last_names from the actor table.
+*/
+
+SELECT DISTINCT last_name
+FROM actor;
+
+/*
+	b. SELECT all distinct postal codes from the address table.
+*/
+
+SELECT DISTINCT postal_code
+FROM address;
+
+/*
+	c. Select all distinct ratings from the film table.
+*/
+
+SELECT DISTINCT rating
+from film;
+
+/*
+3. WHERE clause
+	a. Select the title, description, rating, movie length columns from the films table that lasts three hours or longer.
+*/
+
+SELECT title, description, rating, length as movie_length
+from film
+WHERE length >= 60*3
+ORDER BY movie_length DESC;
+
+/*
+What is the average replacement cost of a film? Does this change depending on the rating of the film?
+*/
+
+SELECT AVG(replacement_cost)
+FROM film;
+
+SELECT rating, AVG(replacement_cost)
+FROM film
+GROUP by rating;
+
+
+/*
+2. How many different films of each genre are in the database?
+*/
+
+SELECT name as genre, count(*) as count
+FROM film_category
+LEFT JOIN category using (category_id)
+GROUP BY genre;
+
+/*
+What are the 5 frequently rented films?
+*/
+
+SELECT title, count(*) as count
+FROM rental
+LEFT join inventory using (inventory_id)
+LEFT join film using (film_id)
+GROUP BY title
+ORDER BY count DESC
+LIMIT 5;
+
+/*
+What are the most profitable films in terms of gross revenue?
+*/
+
+SELECT title, SUM(amount) as gross_revenue
+from payment
+LEFT JOIN rental using (rental_id)
+LEFT JOIN inventory using (inventory_id)
+LEFT JOIN film using (film_id)
+GROUP BY title
+ORDER BY gross_revenue DESC
+LIMIT 5;
+
+/*
+Who is the best customer?
+*/
+
+SELECT customer_id, full_name, total
+FROM (/*Create a table that is grouped by customer_id payments*/
+	SELECT customer_id, CONCAT(first_name, ' ', last_name) as full_name, 		SUM(amount) as total
+	FROM payment
+	LEFT JOIN customer using (customer_id)
+	GROUP BY customer_id
+	ORDER BY total DESC) as rev
+WHERE total = (
+		/*Create a table that selects the max(total) from the 'rev' table in the first FROM statment*/
+		SELECT MAX(total)
+		FROM (
+			SELECT customer_id, SUM(amount) as total
+			FROM payment
+			LEFT JOIN customer using (customer_id)
+			GROUP BY customer_id
+			ORDER BY total DESC) as rev);
+			
+/*
+Who are the top 5 actors (who have appeared in the most films).
+*/
+SELECT actor_id, CONCAT(first_name, ' ', last_name) as full_name, count(*) as film_amt
+FROM film_actor
+LEFT JOIN actor using (actor_id)
+GROUP BY actor_id, full_name
+ORDER BY film_amt DESC
+LIMIT 5;
+
+/*
+What are the sales for each store in each month of 2005?
+*/
+
+SELECT MONTH(payment_date) as month, store_id, SUM(amount)
+FROM payment
+LEFT JOIN rental using (rental_id)
+LEFT JOIN inventory using (inventory_id)
+WHERE YEAR(payment_date) = '2005' AND store_id IS NOT NULL
+GROUP BY month, store_id;
+
+/*
+BONUS:
+Find the film title, customer name, customer phone number, and customer address for all outstanding DVD's
+*/
+
+SELECT inventory_id, title, CONCAT(last_name, ', ', first_name) as customer_name, phone, DATEDIFF(rental.last_update, rental_date) as days_out, rental_date, rental.last_update
+from rental
+LEFT JOIN inventory using (inventory_id)
+LEFT JOIN film using (film_id)
+LEFT JOIN customer using (customer_id)
+LEFT JOIN address using (address_id)
+WHERE return_date IS NULL
+ORDER BY days_out DESC;
